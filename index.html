@@ -11,7 +11,8 @@
     <a-assets>
       <img id="card" src="../assets/target-images/cookie.png" />
       <a-asset-item id="astronautModel" src="assets/models/NeilArmstrong.glb"></a-asset-item>
-      <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item> <!-- ペンギンモデルのアセットを追加 -->
+      <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item>
+      <audio id="soundEffect" src="../assets/sounds/celebration.mp3"></audio> <!-- サウンドを追加 -->
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -34,18 +35,19 @@
 
     function updateModel() {
       if (modelLoaded) {
-        // let condition = true; // 任意の条件をここで設定
         let condition = false; // 任意の条件をここで設定
         const astronautModel = document.querySelector('#astronautModelEntity');
         const penguinModel = document.querySelector('#penguinModelEntity');
-        
+        const soundEffect = document.querySelector('#soundEffect'); // サウンドを取得
+
         if (condition) {
           astronautModel.setAttribute('visible', true); // 宇宙飛行士モデルを表示
           penguinModel.setAttribute('visible', false); // ペンギンモデルを非表示
         } else {
           astronautModel.setAttribute('visible', false); // 宇宙飛行士モデルを非表示
           penguinModel.setAttribute('visible', true); // ペンギンモデルを表示
-          movePenguin(); // ペンギンを動かす関数を呼び出し
+          movePenguin(); // ペンギンを動かす関数を呼び出す
+          soundEffect.play(); // サウンドを再生
         }
       }
     }
