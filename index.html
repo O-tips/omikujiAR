@@ -12,7 +12,7 @@
       <img id="card" src="../assets/target-images/cookie.png" />
       <a-asset-item id="astronautModel" src="assets/models/NeilArmstrong.glb"></a-asset-item>
       <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item>
-      <audio id="soundEffect" src="../assets/sounds/celebration.mp3"></audio> <!-- サウンドを追加 -->
+      <audio id="soundEffect" src="../assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -26,6 +26,7 @@
 
   <script>
     let modelLoaded = false; // モデルが読み込まれたかどうかを追跡
+    let soundPlayed = false; // サウンドが再生されたかどうかを追跡
 
     // 宇宙飛行士モデルの読み込みイベント
     document.querySelector('#astronautModelEntity').addEventListener('model-loaded', () => {
@@ -35,10 +36,10 @@
 
     function updateModel() {
       if (modelLoaded) {
+        const soundEffect = document.querySelector('#soundEffect');
         let condition = false; // 任意の条件をここで設定
         const astronautModel = document.querySelector('#astronautModelEntity');
         const penguinModel = document.querySelector('#penguinModelEntity');
-        const soundEffect = document.querySelector('#soundEffect'); // サウンドを取得
 
         if (condition) {
           astronautModel.setAttribute('visible', true); // 宇宙飛行士モデルを表示
@@ -47,7 +48,12 @@
           astronautModel.setAttribute('visible', false); // 宇宙飛行士モデルを非表示
           penguinModel.setAttribute('visible', true); // ペンギンモデルを表示
           movePenguin(); // ペンギンを動かす関数を呼び出す
-          soundEffect.play(); // サウンドを再生
+
+          // ペンギンモデルが表示された後にサウンドを再生
+          if (!soundPlayed) {
+            soundPlayed = true; // サウンドが再生されたフラグを立てる
+            soundEffect.play(); // サウンドを再生
+          }
         }
       }
     }
@@ -71,6 +77,5 @@
       animate(); // アニメーション開始
     }
   </script>
-
 </body>
 </html>
