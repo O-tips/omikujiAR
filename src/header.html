@@ -1,0 +1,35 @@
+<!-- header.html -->
+<div class="header">
+  <!-- <div class="logo">OMIKUJI</div> -->
+  <div class="logo">おみくじ</div>
+  <!-- <div class="user-info">user : Sample User</div> -->
+</div>
+
+<!-- Google Fontsのリンクを追加 -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  /* ヘッダーのスタイル */
+  .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      padding: 10px 100px;
+      font-family: Arial, sans-serif;
+      background-image: url('../assets/images/maccha_drink.png'); /*パターン画像のパスを更新*/
+      background-size: cover; /* 画像を全体に表示 */
+      height: 100px;
+  }
+
+  /* ロゴにフォントを適用 */
+  .header .logo {
+      font-size: 2em;
+      font-weight: bold;
+      font-family: 'Roboto Slab', serif; /* 新しいフォントを指定 */
+  }
+
+  .header .user-info {
+      font-size: 1em;
+  }
+</style>
