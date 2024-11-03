@@ -7,17 +7,6 @@
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
 </head>
 <body>
-  <!-- ヘッダーの読み込み -->
-  <div id="header-container"></div>
-  <script>
-    // ヘッダーを読み込む
-    fetch('src/header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-container').innerHTML = data;
-      });
-  </script>
-
   <a-scene mindar-image="imageTargetSrc: ../assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
       <img id="card" src="../assets/target-images/cookie.png" />
@@ -36,53 +25,56 @@
   </a-scene>
 
   <script>
-    let modelLoaded = false;
-    let soundPlayed = false;
+    let modelLoaded = false; // モデルが読み込まれたかどうかを追跡
+    let soundPlayed = false; // サウンドが再生されたかどうかを追跡
 
+    // 宇宙飛行士モデルの読み込みイベント
     document.querySelector('#astronautModelEntity').addEventListener('model-loaded', () => {
-      modelLoaded = true;
-      updateModel();
+      modelLoaded = true; // モデルが読み込まれたときにフラグを立てる
+      updateModel(); // モデルを更新
     });
 
     function updateModel() {
       if (modelLoaded) {
         const soundEffect = document.querySelector('#soundEffect');
-        let condition = false;
+        let condition = false; // 任意の条件をここで設定
         const astronautModel = document.querySelector('#astronautModelEntity');
         const penguinModel = document.querySelector('#penguinModelEntity');
 
         if (condition) {
-          astronautModel.setAttribute('visible', true);
-          penguinModel.setAttribute('visible', false);
+          astronautModel.setAttribute('visible', true); // 宇宙飛行士モデルを表示
+          penguinModel.setAttribute('visible', false); // ペンギンモデルを非表示
         } else {
-          astronautModel.setAttribute('visible', false);
-          penguinModel.setAttribute('visible', true);
-          movePenguin();
+          astronautModel.setAttribute('visible', false); // 宇宙飛行士モデルを非表示
+          penguinModel.setAttribute('visible', true); // ペンギンモデルを表示
+          movePenguin(); // ペンギンを動かす関数を呼び出す
 
+          // ペンギンモデルが表示された後にサウンドを再生
           if (!soundPlayed) {
-            soundPlayed = true;
-            soundEffect.play();
+            soundPlayed = true; // サウンドが再生されたフラグを立てる
+            soundEffect.play(); // サウンドを再生
           }
         }
       }
     }
 
+    // ペンギンを左右に動かす関数
     function movePenguin() {
       const penguin = document.querySelector('#penguinModelEntity');
-      let position = 0;
-      const speed = 0.01;
-      let direction = 1;
+      let position = 0; // 初期位置
+      const speed = 0.01; // 移動速度
+      let direction = 1; // 移動方向
 
       function animate() {
-        position += speed * direction;
-        if (position > 0.5 || position < -0.5) {
-          direction *= -1;
+        position += speed * direction; // 位置を更新
+        if (position > 0.5 || position < -0.5) { // 範囲を制限
+          direction *= -1; // 方向を反転
         }
-        penguin.setAttribute('position', `0 ${position} 0.1`);
-        requestAnimationFrame(animate);
+        penguin.setAttribute('position', `0 ${position} 0.1`); // ペンギンの位置を更新
+        requestAnimationFrame(animate); // 次のフレームで再実行
       }
 
-      animate();
+      animate(); // アニメーション開始
     }
   </script>
 </body>
