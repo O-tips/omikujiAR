@@ -33,11 +33,13 @@
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="false"></a-gltf-model>
-      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="false"></a-gltf-model>
-      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="false"></a-gltf-model>
+      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
+      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="true"></a-gltf-model>
+      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="true"></a-gltf-model>
     </a-entity>
   </a-scene>
+
+  <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
 
   <script>
     let modelLoaded = false;
@@ -58,6 +60,21 @@
       soundPlayed = true;
     });
 
+    const muteButton = document.getElementById('muteButton');
+    const soundEffect = document.querySelector('#soundEffect');
+    soundEffect.muted = true;
+    muteButton.addEventListener('click', function() {
+      if (soundEffect.muted) {
+        soundEffect.muted = false;
+        console.log("sound muted off");
+        muteButton.textContent = "音声ミュート中";
+      } else {
+        soundEffect.muted = true;
+        console.log("sound muted on");
+        muteButton.textContent = "音声ミュート解除";
+      }
+    });
+
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
@@ -68,8 +85,7 @@
       if (modelLoaded) {
         console.log("Updating model");
         // 効果音
-        const soundEffect = document.querySelector('#soundEffect');
-        if (!soundPlayed) {
+        if (!soundPlayed && !soundEffect.muted) {
           soundPlayed = true;
           soundEffect.play();
         }
@@ -100,6 +116,7 @@
         photoFrameOverlay.style.display = 'block';
 
         // モデル表示の確認
+        /*
         setTimeout(() => {
           models.forEach((model, idx) => {
             console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
@@ -108,6 +125,7 @@
             }
           });
         }, 100);
+        */
       }
     }
 
