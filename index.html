@@ -5,7 +5,10 @@
     <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- ヘッダーの読み込み -->
@@ -90,7 +93,24 @@
         ></a-gltf-model>
       </a-entity>
     </a-scene>
-    <div class="ui">
+    <div
+      class="ui"
+      style="
+        position: fixed;
+        bottom: 20px; /* 画面下からの距離を調整 */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000; /* 他の要素よりも上に表示 */
+        background: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* 背景色を半透明にして視認性を向上 */
+        padding: 10px;
+        border-radius: 8px;
+      "
+    >
       <img id="snap" />
       <a href="#" id="delete-photo" title="Delete Photo" class="disabled"
         ><i class="material-icons">delete</i></a
