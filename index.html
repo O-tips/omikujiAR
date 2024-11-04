@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -32,11 +33,7 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
-      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="true"></a-gltf-model>
-      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="true"></a-gltf-model>
-    </a-entity>
+    <a-entity id="target-container" mindar-image-target="targetIndex: 0"></a-entity>
   </a-scene>
 
   <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
@@ -44,6 +41,27 @@
   <script>
     let modelLoaded = false;
     let soundPlayed = false;
+    let randInt;
+
+    const models = [
+      document.querySelector('#model0'),
+      document.querySelector('#model1'),
+      document.querySelector('#model2')
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      randInt = getRandomInt(0, 3);
+      console.log("Initial random model index: " + randInt);
+      // 選択されたモデルを配置
+      const targetContainer = document.querySelector('#target-container');
+      const modelElement = document.createElement('a-gltf-model');
+      modelElement.setAttribute('id', `model${randInt}`);
+      modelElement.setAttribute('rotation', '0 -90 0');
+      modelElement.setAttribute('position', '0 0 0.1');
+      modelElement.setAttribute('scale', '0.5 0.5 0.5');
+      modelElement.setAttribute('src', `#model${randInt}`);
+      targetContainer.appendChild(modelElement);
+    });
 
     const sceneEl = document.querySelector('a-scene');
     sceneEl.addEventListener('arReady', (event) => {
@@ -89,15 +107,6 @@
           soundPlayed = true;
           soundEffect.play();
         }
-
-        // モデル表示
-        var randInt = getRandomInt(0, 3);
-        console.log("Selected model index: : " + randInt);
-        const models = [
-          document.querySelector('#model0'),
-          document.querySelector('#model1'),
-          document.querySelector('#model2')
-        ];
         
         models.forEach((model, idx) => {
           const isVisible = idx === randInt;
@@ -114,18 +123,6 @@
         // フォトフレーム表示
         const photoFrameOverlay = document.getElementById('photo-frame-overlay');
         photoFrameOverlay.style.display = 'block';
-
-        // モデル表示の確認
-        /*
-        setTimeout(() => {
-          models.forEach((model, idx) => {
-            console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
-            if (model.object3D) {
-              console.log(`Model ${idx} object3D visibility: ${model.object3D.visible}`);
-            }
-          });
-        }, 100);
-        */
       }
     }
 
