@@ -29,6 +29,10 @@
       <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
       <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
       <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
+      <a-asset-item id="model3" src="assets/models/syokichi.glb"></a-asset-item>
+      <a-asset-item id="model4" src="assets/models/suekichi.glb"></a-asset-item>
+      <a-asset-item id="model5" src="assets/models/kyo.glb"></a-asset-item>
+      <a-asset-item id="model6" src="assets/models/daikyo.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
@@ -44,14 +48,8 @@
     let soundPlayed = false;
     let randInt;
 
-    const models = [
-      document.querySelector('#model0'),
-      document.querySelector('#model1'),
-      document.querySelector('#model2')
-    ];
-
     document.addEventListener('DOMContentLoaded', function() {
-      randInt = getRandomInt(0, 3);
+      randInt = getRandomInt(0, 7);
       console.log("Initial random model index: " + randInt);
       // 選択されたモデルを配置
       const targetContainer = document.querySelector('#target-container');
@@ -108,15 +106,6 @@
           soundPlayed = true;
           soundEffect.play();
         }
-        
-        models.forEach((model, idx) => {
-          const isVisible = idx === randInt;
-          console.log(`Model ${idx} visibility: ${isVisible}`);
-          model.setAttribute('visible', isVisible);
-          if (model.object3D) {
-            model.object3D.visible = isVisible;
-          }
-        });
         
         // モデルの動き
         movePenguin();
