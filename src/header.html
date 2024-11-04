@@ -1,12 +1,14 @@
 <!-- header.html -->
 <div class="header">
   <!-- <div class="logo">OMIKUJI</div> -->
-  <div class="logo">おみくじ</div>
+  <div class="logo">ARおみくじ</div>
+  <div class="detail">by 情報科M2有志</div>
   <!-- <div class="user-info">user : Sample User</div> -->
 </div>
 
 <!-- Google Fontsのリンクを追加 -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet">
 
 <style>
   /* ヘッダーのスタイル */
@@ -15,18 +17,23 @@
       align-items: center;
       justify-content: space-between;
       color: white;
-      padding: 10px 100px;
+      padding: 10px 50px 0px;
       font-family: Arial, sans-serif;
-      background-image: url('../assets/images/maccha_drink.png'); /*パターン画像のパスを更新*/
       background-size: cover; /* 画像を全体に表示 */
-      height: 100px;
+      height: 80px;
   }
 
   /* ロゴにフォントを適用 */
   .header .logo {
       font-size: 2em;
       font-weight: bold;
-      font-family: 'Roboto Slab', serif; /* 新しいフォントを指定 */
+      font-family: 'Kiwi Maru', serif;
+  }
+
+  .header .detail {
+    font-size: 0.5em;
+    font-weight: bold;
+    font-family: 'Kiwi Maru', serif;
   }
 
   .header .user-info {
