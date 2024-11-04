@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- ヘッダーの読み込み -->
-  <div id="header-container"></div>
+  <div id="header-container" style="position: relative; z-index: 1001;"></div>
   <script>
     // ヘッダーを読み込む
     fetch('src/header.html')
@@ -18,12 +18,17 @@
       });
   </script>
 
-  <a-scene mindar-image="imageTargetSrc: ../assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <div id="photo-frame-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <img src="assets/images/photoFrame.png" style="width: 100%; height: calc(100% - 50px); object-fit: cover; margin-top: 50px;">
+  </div>
+
+  <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
-      <img id="card" src="../assets/target-images/cookie.png" />
+      <img id="card" src="assets/target-images/cookie.png" />
+      <img id="photoFrame" src="assets/images/photoFrame.png">
       <a-asset-item id="astronautModel" src="assets/models/NeilArmstrong.glb"></a-asset-item>
       <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item>
-      <audio id="soundEffect" src="../assets/sounds/celebration.mp3"></audio>
+      <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -39,9 +44,19 @@
     let modelLoaded = false;
     let soundPlayed = false;
 
-    document.querySelector('#astronautModelEntity').addEventListener('model-loaded', () => {
+    const sceneEl = document.querySelector('a-scene');
+    sceneEl.addEventListener('arReady', (event) => {
+      console.log("MindAR is ready")
+    });
+    sceneEl.addEventListener('targetFound', (event) => {
+      console.log("Target found");
       modelLoaded = true;
+      soundPlayed = false;
       updateModel();
+    });
+    sceneEl.addEventListener('targetLost', (event) => {
+      console.log("Target lost");
+      soundPlayed = true;
     });
 
     function updateModel() {
@@ -50,13 +65,16 @@
         let condition = false;
         const astronautModel = document.querySelector('#astronautModelEntity');
         const penguinModel = document.querySelector('#penguinModelEntity');
+        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
 
         if (condition) {
           astronautModel.setAttribute('visible', true);
           penguinModel.setAttribute('visible', false);
+          photoFrameOverlay.style.display = 'block';
         } else {
           astronautModel.setAttribute('visible', false);
           penguinModel.setAttribute('visible', true);
+          photoFrameOverlay.style.display = 'block';
           movePenguin();
 
           if (!soundPlayed) {
