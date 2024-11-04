@@ -1,107 +1,178 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
-</head>
-<body>
-  <!-- ヘッダーの読み込み -->
-  <div id="header-container" style="position: relative; z-index: 1001;"></div>
-  <script>
-    // ヘッダーを読み込む
-    fetch('src/header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-container').innerHTML = data;
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <body>
+    <!-- ヘッダーの読み込み -->
+    <div id="header-container" style="position: relative; z-index: 1001"></div>
+    <script>
+      // ヘッダーを読み込む
+      fetch("src/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div
+      id="photo-frame-overlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+      "
+    >
+      <img
+        src="assets/images/photoFrame.png"
+        style="
+          width: 100%;
+          height: calc(100% - 50px);
+          object-fit: cover;
+          margin-top: 50px;
+        "
+      />
+    </div>
+
+    <a-scene
+      mindar-image="imageTargetSrc: assets/target-images/cookie.mind;"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <img id="card" src="assets/target-images/cookie.png" />
+        <img id="photoFrame" src="assets/images/photoFrame.png" />
+        <a-asset-item
+          id="astronautModel"
+          src="assets/models/NeilArmstrong.glb"
+        ></a-asset-item>
+        <a-asset-item
+          id="penguinModel"
+          src="assets/models/penguinex.glb"
+        ></a-asset-item>
+        <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane
+          src="#card"
+          position="0 0 0"
+          height="0.552"
+          width="1"
+          rotation="0 0 0"
+        ></a-plane>
+        <a-gltf-model
+          id="astronautModelEntity"
+          rotation="0 -90 0"
+          position="0 0 0.1"
+          scale="0.5 0.5 0.5"
+          src="#astronautModel"
+        ></a-gltf-model>
+        <a-gltf-model
+          id="penguinModelEntity"
+          rotation="0 -90 0"
+          position="0 0 0.1"
+          scale="0.5 0.5 0.5"
+          src="#penguinModel"
+          visible="false"
+        ></a-gltf-model>
+      </a-entity>
+    </a-scene>
+    <div class="ui">
+      <img id="snap" />
+      <a href="#" id="delete-photo" title="Delete Photo" class="disabled"
+        ><i class="material-icons">delete</i></a
+      >
+      <a href="" id="take-photo" title="Take Photo"
+        ><i class="material-icons">photo_camera</i></a
+      >
+      <a
+        href="#"
+        id="download-photo"
+        download="selfie.png"
+        title="Save Photo"
+        class="disabled"
+        target="_blank"
+        ><i class="material-icons">file_download</i></a
+      >
+    </div>
+    <script>
+      let modelLoaded = false;
+      let soundPlayed = false;
+
+      const sceneEl = document.querySelector("a-scene");
+      sceneEl.addEventListener("arReady", (event) => {
+        console.log("MindAR is ready");
       });
-  </script>
+      sceneEl.addEventListener("targetFound", (event) => {
+        console.log("Target found");
+        modelLoaded = true;
+        soundPlayed = false;
+        updateModel();
+      });
+      sceneEl.addEventListener("targetLost", (event) => {
+        console.log("Target lost");
+        soundPlayed = true;
+      });
 
-  <div id="photo-frame-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
-    <img src="assets/images/photoFrame.png" style="width: 100%; height: calc(100% - 50px); object-fit: cover; margin-top: 50px;">
-  </div>
+      function updateModel() {
+        if (modelLoaded) {
+          const soundEffect = document.querySelector("#soundEffect");
+          let condition = false;
+          const astronautModel = document.querySelector(
+            "#astronautModelEntity"
+          );
+          const penguinModel = document.querySelector("#penguinModelEntity");
+          const photoFrameOverlay = document.getElementById(
+            "photo-frame-overlay"
+          );
 
-  <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-    <a-assets>
-      <img id="card" src="assets/target-images/cookie.png" />
-      <img id="photoFrame" src="assets/images/photoFrame.png">
-      <a-asset-item id="astronautModel" src="assets/models/NeilArmstrong.glb"></a-asset-item>
-      <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item>
-      <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
-    </a-assets>
+          if (condition) {
+            astronautModel.setAttribute("visible", true);
+            penguinModel.setAttribute("visible", false);
+            photoFrameOverlay.style.display = "block";
+          } else {
+            astronautModel.setAttribute("visible", false);
+            penguinModel.setAttribute("visible", true);
+            photoFrameOverlay.style.display = "block";
+            movePenguin();
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-      <a-gltf-model id="astronautModelEntity" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#astronautModel"></a-gltf-model>
-      <a-gltf-model id="penguinModelEntity" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#penguinModel" visible="false"></a-gltf-model>
-    </a-entity>
-  </a-scene>
-
-  <script>
-    let modelLoaded = false;
-    let soundPlayed = false;
-
-    const sceneEl = document.querySelector('a-scene');
-    sceneEl.addEventListener('arReady', (event) => {
-      console.log("MindAR is ready")
-    });
-    sceneEl.addEventListener('targetFound', (event) => {
-      console.log("Target found");
-      modelLoaded = true;
-      soundPlayed = false;
-      updateModel();
-    });
-    sceneEl.addEventListener('targetLost', (event) => {
-      console.log("Target lost");
-      soundPlayed = true;
-    });
-
-    function updateModel() {
-      if (modelLoaded) {
-        const soundEffect = document.querySelector('#soundEffect');
-        let condition = false;
-        const astronautModel = document.querySelector('#astronautModelEntity');
-        const penguinModel = document.querySelector('#penguinModelEntity');
-        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
-
-        if (condition) {
-          astronautModel.setAttribute('visible', true);
-          penguinModel.setAttribute('visible', false);
-          photoFrameOverlay.style.display = 'block';
-        } else {
-          astronautModel.setAttribute('visible', false);
-          penguinModel.setAttribute('visible', true);
-          photoFrameOverlay.style.display = 'block';
-          movePenguin();
-
-          if (!soundPlayed) {
-            soundPlayed = true;
-            soundEffect.play();
+            if (!soundPlayed) {
+              soundPlayed = true;
+              soundEffect.play();
+            }
           }
         }
       }
-    }
 
-    function movePenguin() {
-      const penguin = document.querySelector('#penguinModelEntity');
-      let position = 0;
-      const speed = 0.01;
-      let direction = 1;
+      function movePenguin() {
+        const penguin = document.querySelector("#penguinModelEntity");
+        let position = 0;
+        const speed = 0.01;
+        let direction = 1;
 
-      function animate() {
-        position += speed * direction;
-        if (position > 0.5 || position < -0.5) {
-          direction *= -1;
+        function animate() {
+          position += speed * direction;
+          if (position > 0.5 || position < -0.5) {
+            direction *= -1;
+          }
+          penguin.setAttribute("position", `0 ${position} 0.1`);
+          requestAnimationFrame(animate);
         }
-        penguin.setAttribute('position', `0 ${position} 0.1`);
-        requestAnimationFrame(animate);
-      }
 
-      animate();
-    }
-  </script>
-</body>
+        animate();
+      }
+    </script>
+  </body>
 </html>
