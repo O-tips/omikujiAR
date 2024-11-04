@@ -24,19 +24,18 @@
 
   <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
-      <img id="card" src="assets/target-images/cookie.png" />
-      <img id="photoFrame" src="assets/images/photoFrame.png">
-      <a-asset-item id="astronautModel" src="assets/models/NeilArmstrong.glb"></a-asset-item>
-      <a-asset-item id="penguinModel" src="assets/models/penguinex.glb"></a-asset-item>
+      <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
+      <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
+      <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-      <a-gltf-model id="astronautModelEntity" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#astronautModel"></a-gltf-model>
-      <a-gltf-model id="penguinModelEntity" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#penguinModel" visible="false"></a-gltf-model>
+      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="false"></a-gltf-model>
+      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="false"></a-gltf-model>
+      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="false"></a-gltf-model>
     </a-entity>
   </a-scene>
 
@@ -59,34 +58,61 @@
       soundPlayed = true;
     });
 
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // 上限は除き、下限は含む
+    }
+
     function updateModel() {
       if (modelLoaded) {
+        console.log("Updating model");
+        // 効果音
         const soundEffect = document.querySelector('#soundEffect');
-        let condition = false;
-        const astronautModel = document.querySelector('#astronautModelEntity');
-        const penguinModel = document.querySelector('#penguinModelEntity');
-        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
-
-        if (condition) {
-          astronautModel.setAttribute('visible', true);
-          penguinModel.setAttribute('visible', false);
-          photoFrameOverlay.style.display = 'block';
-        } else {
-          astronautModel.setAttribute('visible', false);
-          penguinModel.setAttribute('visible', true);
-          photoFrameOverlay.style.display = 'block';
-          movePenguin();
-
-          if (!soundPlayed) {
-            soundPlayed = true;
-            soundEffect.play();
-          }
+        if (!soundPlayed) {
+          soundPlayed = true;
+          soundEffect.play();
         }
+
+        // モデル表示
+        var randInt = getRandomInt(0, 3);
+        console.log("Selected model index: : " + randInt);
+        const models = [
+          document.querySelector('#model0'),
+          document.querySelector('#model1'),
+          document.querySelector('#model2')
+        ];
+        
+        models.forEach((model, idx) => {
+          const isVisible = idx === randInt;
+          console.log(`Model ${idx} visibility: ${isVisible}`);
+          model.setAttribute('visible', isVisible);
+          if (model.object3D) {
+            model.object3D.visible = isVisible;
+          }
+        });
+        
+        // モデルの動き
+        movePenguin();
+
+        // フォトフレーム表示
+        const photoFrameOverlay = document.getElementById('photo-frame-overlay');
+        photoFrameOverlay.style.display = 'block';
+
+        // モデル表示の確認
+        setTimeout(() => {
+          models.forEach((model, idx) => {
+            console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
+            if (model.object3D) {
+              console.log(`Model ${idx} object3D visibility: ${model.object3D.visible}`);
+            }
+          });
+        }, 100);
       }
     }
 
     function movePenguin() {
-      const penguin = document.querySelector('#penguinModelEntity');
+      const penguin = document.querySelector('#model0');
       let position = 0;
       const speed = 0.01;
       let direction = 1;
