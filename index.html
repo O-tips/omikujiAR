@@ -14,7 +14,7 @@
     <style>
       .ui {
         position: absolute;
-        z-index: 100;
+        z-index: 1001;
         bottom: 0;
         left: 0;
         width: 100%;
@@ -306,8 +306,9 @@
       var download_photo_btn = document.querySelector("#download-photo");
 
       //スナップショットボタン
-      take_photo_btn.addEventListener("click", function (e) {
-        e.preventDefault();
+      take_photo_btn.addEventListener("click", function () {
+        console.log("take_photo_btn clicked");
+        // e.preventDefault();
         var video = document.querySelector("video");
         var snap = takeSnapshot(video);
 
