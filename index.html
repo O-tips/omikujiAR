@@ -5,6 +5,7 @@
     <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
@@ -233,6 +234,35 @@
 
       //スナップショットを撮る
       function takeSnapshot(video) {
+        // const aScene = document.querySelector("a-scene").renderer.domElement;
+        // const canvas = document.createElement("canvas");
+        // canvas.width = aScene.width;
+        // canvas.height = aScene.height;
+        // const context = canvas.getContext("2d");
+
+        // // ARシーンをキャンバスに描画
+        // context.drawImage(aScene, 0, 0);
+
+        // // ヘッダーやフレームを重ねて描画
+        // const header = document.querySelector("#header-container");
+        // const photoFrameOverlay = document.querySelector(
+        //   "#photo-frame-overlay"
+        // );
+        // if (header) {
+        //   context.drawImage(header, 0, 0, canvas.width, header.offsetHeight);
+        // }
+        // if (photoFrameOverlay && photoFrameOverlay.style.display !== "none") {
+        //   context.drawImage(
+        //     photoFrameOverlay,
+        //     0,
+        //     0,
+        //     canvas.width,
+        //     canvas.height
+        //   );
+        // }
+
+        // return canvas.toDataURL("image/png");
+
         var resizedCanvas = document.createElement("canvas");
         var resizedContext = resizedCanvas.getContext("2d");
         var width = video.videoWidth;
@@ -265,8 +295,84 @@
               height
             );
           }
-          return resizedCanvas.toDataURL("image/png");
         }
+        // photoFrame.pngの読み込みと描画
+        const photoFrame = new Image();
+        photoFrame.src = "assets/images/photoFrame.png"; // photoFrame.pngのパス
+        resizedContext.drawImage(photoFrame, 0, 0, width, height);
+        // // 画像が読み込まれた後に描画
+        // return new Promise((resolve) => {
+        //   photoFrame.onload = () => {
+        //     resizedContext.drawImage(photoFrame, 0, 0, width, height);
+        //     resolve(resizedCanvas.toDataURL("image/png"));
+        //   };
+        //   // return resizedCanvas.toDataURL("image/png");
+        // });
+
+        // // ヘッダーとフレームを合成
+        // const header = document.querySelector("#header-container");
+        // const photoFrameOverlay = document.querySelector(
+        //   "#photo-frame-overlay"
+        // );
+        // var resizedCanvas = document.createElement("canvas");
+        // var resizedContext = resizedCanvas.getContext("2d");
+        // var width = video.videoWidth;
+        // var height = video.videoHeight;
+        // var aScene = document
+        //   .querySelector("a-scene")
+        //   .components.screenshot.getCanvas("perspective");
+
+        // return Promise.all([
+        //   html2canvas(header),
+        //   html2canvas(photoFrameOverlay),
+        // ]).then(([headerCanvas, frameCanvas]) => {
+        //   if (width && height) {
+        //     //videoのサイズをキャンバスにセット
+        //     resizedCanvas.width = width;
+        //     resizedCanvas.height = height;
+        //     //キャンバスにvideoをコピー
+        //     resizedContext.drawImage(video, 0, 0, width, height);
+
+        //     //カメラの画角でar側の縮小処理を変える
+        //     if (width > height) {
+        //       // 横長（PC)
+        //       resizedContext.drawImage(aScene, 0, 0, width, height);
+        //     } else {
+        //       // 縦長（スマホ）
+        //       var scale = height / width;
+        //       var scaledWidth = height * scale;
+        //       var marginLeft = (width - scaledWidth) / 2;
+        //       resizedContext.drawImage(
+        //         aScene,
+        //         marginLeft,
+        //         0,
+        //         scaledWidth,
+        //         height
+        //       );
+        //     }
+        //   }
+        //   // resizedContext.drawImage(headerCanvas, 0, 0, width, height);
+
+        //   // // 次に、フォトフレームを合成
+        //   // if (photoFrameOverlay && photoFrameOverlay.style.display !== "none") {
+        //   //   // resizedContext.drawImage(frameCanvas, 0, 0, width, height);
+        //   //   // 最終的なスナップショットを返す
+        //   //   const snapshot = resizedCanvas.toDataURL("image/png");
+        //   //   document.querySelector("#snap").setAttribute("src", snapshot);
+        //   //   document.querySelector("#download-photo").href = snapshot;
+        //   // }
+        //   return resizedCanvas.toDataURL("image/png");
+        // });
+
+        // if (header) {
+        //   resizedContext.drawImage(header, 0, 0, width, header.offsetHeight);
+        // }
+
+        // if (photoFrameOverlay && photoFrameOverlay.style.display !== "none") {
+        //   resizedContext.drawImage(photoFrameOverlay, 0, 0, width, height);
+        // }
+
+        return resizedCanvas.toDataURL("image/png");
       }
     </script>
   </body>
