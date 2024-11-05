@@ -27,12 +27,9 @@
   <a-scene mindar-image="imageTargetSrc: assets/target-images/cookie.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-assets>
       <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
-      <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
-      <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
-      <a-asset-item id="model3" src="assets/models/syokichi.glb"></a-asset-item>
-      <a-asset-item id="model4" src="assets/models/suekichi.glb"></a-asset-item>
-      <a-asset-item id="model5" src="assets/models/kyo.glb"></a-asset-item>
-      <a-asset-item id="model6" src="assets/models/daikyo.glb"></a-asset-item>
+      <a-asset-item id="model1" src="assets/models/chukichi.glb"></a-asset-item>
+      <a-asset-item id="model2" src="assets/models/syokichi.glb"></a-asset-item>
+      <a-asset-item id="model3" src="assets/models/kyo.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
@@ -43,13 +40,21 @@
 
   <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
 
+  <dialog id="fortune-dialog" class="fortune-dialog">
+    <div class="fortune-content">
+      <h2 id="fortune-text"></h2>
+      <pre id="fortune-details"></pre>
+      <button id="close-fortune">閉じる</button>
+    </div>
+  </dialog>
+  
   <script>
     let modelLoaded = false;
     let soundPlayed = false;
     let randInt;
 
     document.addEventListener('DOMContentLoaded', function() {
-      randInt = getRandomInt(0, 7);
+      randInt = getRandomInt(0, 1);
       console.log("Initial random model index: " + randInt);
       // 選択されたモデルを配置
       const targetContainer = document.querySelector('#target-container');
@@ -106,33 +111,76 @@
           soundPlayed = true;
           soundEffect.play();
         }
-        
-        // モデルの動き
-        movePenguin();
 
         // フォトフレーム表示
         const photoFrameOverlay = document.getElementById('photo-frame-overlay');
         photoFrameOverlay.style.display = 'block';
+
       }
     }
 
-    function movePenguin() {
-      const penguin = document.querySelector('#model0');
-      let position = 0;
-      const speed = 0.01;
-      let direction = 1;
+    const fortuneDialog = document.getElementById('fortune-dialog');
+    const fortuneText = document.getElementById('fortune-text');
+    const fortuneDetails = document.getElementById('fortune-details');
+    const closeFortuneButton = document.getElementById('close-fortune');
+    const fortuneTexts = {
+      0: "大吉",
+      1: "中吉",
+      2: "小吉",
+      3: "凶",
+    };
+    const fortuneDescriptions = {
+      0:  "絶好調の予感！何をやってもうまくいきそう！\n"+
+          "願望: あなたの願いが叶う日！思い切って行動してみて！\n"+
+          "学問: 新しいことを学ぶのにぴったりの日。試験や発表もバッチリ成功するよ。\n"+
+          "恋愛: 素敵な出会いや、関係深まるチャンス到来！積極的に行動してみて！\n"+
+          "旅行: 楽しい冒険が待っているよ。計画を立てて出発しよう！\n"+
+          "失物: 見つかりそう！ついでにへそくりも出てくるかも...。\n"+
+          "ラッキー言語: Python  簡単で強力！今日は何でもできちゃう日。",
+      1: "かなりいい1日！ちょっとした幸せがあちこちに隠れてるよ。見逃さないで！\n"+
+          "願望: いい感じ！小さな願いが叶いやすい日。周りのサポートも期待できるよ。\n"+
+          "学問: 努力が実を結ぶ日。地道に積み重ねてきたことが形になってくるよ。\n"+
+          "恋愛: 気になる人との距離が縮まるかも。積極的になってみて！\n"+
+          "旅行: 短い旅行やお出かけにはぴったりの日。良い思い出になるよ。\n"+
+          "失物: ヒントが得られるかも。友達に聞いてみるといいかもね。\n"+
+          "ラッキー言語: Java  安定感抜群の1日。大規模なことにもトライしてみて！",
+      2: "ちょっといいことありそう！\n"+
+          "願望: まずまず。自分の目標に向かって進むことで夢に近づけるかも。\n"+
+          "学問: 平凡な1日だけど、その中にも学びのチャンスが。小さな発見を大切に！\n"+
+          "恋愛: 関係を深める日。デートやおしゃべりで楽しい時間を過ごしてね。\n"+
+          "旅行: 行きたい場所への道筋が見えてくる日。計画を練って実行に移そう。\n"+
+          "失物: 見つからないかもしれないけど、他の大切なものに気づく日。\n"+
+          "ラッキー言語: C++  パフォーマンスを意識して、サクサク動こう！",
+      3: "ちょっと注意が必要な日。でも、ピンチはチャンス！乗り越えていこう\n"+
+          "願望: 努力を続ければ必ず道は開けるよ。諦めないで！\n"+
+          "学問: 今日はあえて苦手な分野にトライしてみよう！\n"+
+          "恋愛: 恋愛面では波乱の予感。冷静に対応すれば大丈夫！\n"+
+          "旅行: 旅行計画には注意が必要。急な変更やトラブルに備えて余裕を持とう。\n"+
+          "失物: 今日は探し物運が悪い日。無理せず、また後で探してみよう。\n"+
+          "ラッキー言語: Haskell  たまには型を守るのも大事。安全に過ごそう！",
+    };
 
-      function animate() {
-        position += speed * direction;
-        if (position > 0.5 || position < -0.5) {
-          direction *= -1;
-        }
-        penguin.setAttribute('position', `0 ${position} 0.1`);
-        requestAnimationFrame(animate);
+    document.addEventListener('click', function() {
+      if (fortuneDialog && fortuneDetails) {
+        fortuneText.textContent = fortuneTexts[randInt];
+        fortuneDetails.textContent = fortuneDescriptions[randInt];
+        fortuneDialog.showModal(); // showModal()メソッドを使用
+        console.log('Fortune dialog should be visible now');
+      } else {
+        console.error('Fortune dialog or details element not found');
       }
-
-      animate();
+    });
+  
+    if (closeFortuneButton) {
+      closeFortuneButton.addEventListener('click', function() {
+        event.stopPropagation();
+        fortuneDialog.close();
+        console.log('Fortune dialog should be closed now');
+      });
+    } else {
+      console.error('Close button not found');
     }
+
   </script>
 </body>
 </html>
