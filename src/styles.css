@@ -72,10 +72,19 @@
     text-align: center;
     margin-bottom: 16px;
 }
+
+#fortune-text {
+    margin-top: 0;
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 16px;
+}
   
 #fortune-details {
     color: #555;
-    font-size: 18px;
+    font-size: 2vw;
+    font-family: 'Kiwi Maru', serif;
     line-height: 1.6;
     margin-bottom: 24px;
 }
@@ -94,7 +103,7 @@
 }
   
 #close-fortune:hover {
-    background-color: #ff8181;
+    background-color: #5c4f2f;
 }
   
 /* アニメーション */
