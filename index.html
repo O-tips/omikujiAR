@@ -43,6 +43,14 @@
 
   <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
 
+  <dialog id="fortune-dialog" class="fortune-dialog">
+    <div class="fortune-content">
+      <h2>あなたの運勢</h2>
+      <p id="fortune-details"></p>
+      <button id="close-fortune">閉じる</button>
+    </div>
+  </dialog>
+  
   <script>
     let modelLoaded = false;
     let soundPlayed = false;
@@ -106,33 +114,47 @@
           soundPlayed = true;
           soundEffect.play();
         }
-        
-        // モデルの動き
-        movePenguin();
 
         // フォトフレーム表示
         const photoFrameOverlay = document.getElementById('photo-frame-overlay');
         photoFrameOverlay.style.display = 'block';
+
       }
     }
 
-    function movePenguin() {
-      const penguin = document.querySelector('#model0');
-      let position = 0;
-      const speed = 0.01;
-      let direction = 1;
+    const fortuneDialog = document.getElementById('fortune-dialog');
+    const fortuneDetails = document.getElementById('fortune-details');
+    const closeFortuneButton = document.getElementById('close-fortune');
+    const fortuneDescriptions = {
+      0: "大吉: 今日はあなたにとって素晴らしい日になるでしょう。新しい機会が訪れ、あなたの努力が報われる時です。積極的に行動し、自信を持って前進してください。",
+      1: "吉: 良い兆しが見えています。小さな幸運が重なり、日々の生活に喜びをもたらすでしょう。感謝の気持ちを忘れずに過ごしてください。",
+      2: "中吉: 平穏な日々が続きそうです。大きな変化はありませんが、安定した生活を送ることができるでしょう。日常の小さな幸せを大切にしてください。",
+      3: "小吉: 穏やかな1日になりそうです。大きな変化はありませんが、日常の中に幸せを見出せるでしょう。",
+      4: "末吉: 少し注意が必要な1日かもしれません。慎重に行動すれば、問題なく過ごせるでしょう。",
+      5: "凶: 困難に直面するかもしれません。しかし、それを乗り越えることで成長のチャンスとなります。",
+      6: "大凶: 厳しい1日になるかもしれません。しかし、この逆境を乗り越えることで、大きな飛躍のチャンスとなるでしょう。"
+    };
 
-      function animate() {
-        position += speed * direction;
-        if (position > 0.5 || position < -0.5) {
-          direction *= -1;
-        }
-        penguin.setAttribute('position', `0 ${position} 0.1`);
-        requestAnimationFrame(animate);
+    document.addEventListener('click', function() {
+      if (fortuneDialog && fortuneDetails) {
+        fortuneDetails.textContent = fortuneDescriptions[randInt];
+        fortuneDialog.showModal(); // showModal()メソッドを使用
+        console.log('Fortune dialog should be visible now');
+      } else {
+        console.error('Fortune dialog or details element not found');
       }
-
-      animate();
+    });
+  
+    if (closeFortuneButton) {
+      closeFortuneButton.addEventListener('click', function() {
+        event.stopPropagation();
+        fortuneDialog.close();
+        console.log('Fortune dialog should be closed now');
+      });
+    } else {
+      console.error('Close button not found');
     }
+
   </script>
 </body>
 </html>
