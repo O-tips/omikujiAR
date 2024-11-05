@@ -161,6 +161,13 @@
     </dialog>
 
     <script>
+      // photoFrame.pngの読み込み
+      const photoFrame = new Image();
+      photoFrame.src = "assets/images/photoFrame.png";
+      // header.pngの読み込み
+      const header = new Image();
+      header.src = "assets/images/header.png";
+
       let modelLoaded = false;
       let soundPlayed = false;
       let randInt;
@@ -371,14 +378,16 @@
               height
             );
           }
-          // photoFrame.pngの読み込みと描画
-          const photoFrame = new Image();
-          photoFrame.src = "assets/images/photoFrame.png";
+          // photoFrame.pngの描画
           resizedContext.drawImage(photoFrame, 0, 0, width, height);
-          // header.pngの読み込みと描画
-          const header = new Image();
-          header.src = "assets/images/header.png";
-          resizedContext.drawImage(header, 0, 0, width, height);
+          // header.pngの描画
+          resizedContext.drawImage(
+            header,
+            0,
+            0,
+            width,
+            (width / header.width) * header.height
+          );
 
           return resizedCanvas.toDataURL("image/png");
         }
