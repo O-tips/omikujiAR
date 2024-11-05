@@ -306,9 +306,9 @@
       var download_photo_btn = document.querySelector("#download-photo");
 
       //スナップショットボタン
-      take_photo_btn.addEventListener("click", function () {
+      take_photo_btn.addEventListener("click", function (e) {
         console.log("take_photo_btn clicked");
-        // e.preventDefault();
+        e.preventDefault();
         var video = document.querySelector("video");
         var snap = takeSnapshot(video);
 
