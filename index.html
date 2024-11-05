@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="src/styles.css">
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
@@ -27,16 +29,16 @@
       <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
       <a-asset-item id="model1" src="assets/models/kichi.glb"></a-asset-item>
       <a-asset-item id="model2" src="assets/models/chukichi.glb"></a-asset-item>
+      <a-asset-item id="model3" src="assets/models/syokichi.glb"></a-asset-item>
+      <a-asset-item id="model4" src="assets/models/suekichi.glb"></a-asset-item>
+      <a-asset-item id="model5" src="assets/models/kyo.glb"></a-asset-item>
+      <a-asset-item id="model6" src="assets/models/daikyo.glb"></a-asset-item>
       <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="model0" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model0" visible="true"></a-gltf-model>
-      <a-gltf-model id="model1" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model1" visible="true"></a-gltf-model>
-      <a-gltf-model id="model2" rotation="0 -90 0" position="0 0 0.1" scale="0.5 0.5 0.5" src="#model2" visible="true"></a-gltf-model>
-    </a-entity>
+    <a-entity id="target-container" mindar-image-target="targetIndex: 0"></a-entity>
   </a-scene>
 
   <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1002;">音声ミュート解除</button>
@@ -44,6 +46,21 @@
   <script>
     let modelLoaded = false;
     let soundPlayed = false;
+    let randInt;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      randInt = getRandomInt(0, 7);
+      console.log("Initial random model index: " + randInt);
+      // 選択されたモデルを配置
+      const targetContainer = document.querySelector('#target-container');
+      const modelElement = document.createElement('a-gltf-model');
+      modelElement.setAttribute('id', `model${randInt}`);
+      modelElement.setAttribute('rotation', '0 -90 0');
+      modelElement.setAttribute('position', '0 0 0');
+      modelElement.setAttribute('scale', '0.3 0.3 0.3');
+      modelElement.setAttribute('src', `#model${randInt}`);
+      targetContainer.appendChild(modelElement);
+    });
 
     const sceneEl = document.querySelector('a-scene');
     sceneEl.addEventListener('arReady', (event) => {
@@ -89,24 +106,6 @@
           soundPlayed = true;
           soundEffect.play();
         }
-
-        // モデル表示
-        var randInt = getRandomInt(0, 3);
-        console.log("Selected model index: : " + randInt);
-        const models = [
-          document.querySelector('#model0'),
-          document.querySelector('#model1'),
-          document.querySelector('#model2')
-        ];
-        
-        models.forEach((model, idx) => {
-          const isVisible = idx === randInt;
-          console.log(`Model ${idx} visibility: ${isVisible}`);
-          model.setAttribute('visible', isVisible);
-          if (model.object3D) {
-            model.object3D.visible = isVisible;
-          }
-        });
         
         // モデルの動き
         movePenguin();
@@ -114,18 +113,6 @@
         // フォトフレーム表示
         const photoFrameOverlay = document.getElementById('photo-frame-overlay');
         photoFrameOverlay.style.display = 'block';
-
-        // モデル表示の確認
-        /*
-        setTimeout(() => {
-          models.forEach((model, idx) => {
-            console.log(`Model ${idx} actual visibility: ${model.getAttribute('visible')}`);
-            if (model.object3D) {
-              console.log(`Model ${idx} object3D visibility: ${model.object3D.visible}`);
-            }
-          });
-        }, 100);
-        */
       }
     }
 
