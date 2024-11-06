@@ -1,4 +1,4 @@
-.ui {
+.screenshot-ui {
     position: absolute;
     z-index: 1001;
     bottom: 0;
@@ -10,7 +10,7 @@
     text-align: center;
     box-sizing: border-box;
 }
-.ui a {
+.screenshot-ui a {
     display: inline-block;
     width: 60px;
     height: 60px;
@@ -21,26 +21,41 @@
     border-radius: 50%;
     position: relative;
 }
-.ui a i {
+.screenshot-ui a i {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.ui a:active {
+.screenshot-ui a:active {
     color: #ff0000;
 }
-
-#snap {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    visibility: hidden;
-}
-.ui a.disabled {
+.screenshot-ui a.disabled {
     pointer-events: none;
     color: #cccccc;
 }
+
+.screenshot-display {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+#snap {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    visibility: hidden;
+    pointer-events: auto;
+}
+
 #snap.visible {
     visibility: visible;
 }

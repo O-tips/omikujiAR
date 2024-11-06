@@ -51,8 +51,10 @@
         "
       />
     </div>
-    <div class="ui">
+    <div class="screenshot-display">
       <img id="snap" />
+    </div>
+    <div class="screenshot-ui">
       <a href="#" id="delete-photo" title="Delete Photo" class="disabled"
         ><i class="material-icons">delete</i></a
       >
@@ -76,6 +78,7 @@
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
+      style="z-index: 1000;"
     >
       <a-assets>
         <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
