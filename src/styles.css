@@ -162,3 +162,15 @@
 .fortune-dialog[open] {
     animation: fadeIn 0.3s ease-out;
 }
+
+#clickable-area {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 30vw;
+    background-color: transparent;
+    z-index: 1000;
+    cursor: pointer;
+}

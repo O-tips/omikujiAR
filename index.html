@@ -73,34 +73,20 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <a-asset-item
-          id="model0"
-          src="assets/models/daikichi.glb"
-        ></a-asset-item>
-        <a-asset-item
-          id="model1"
-          src="assets/models/chukichi.glb"
-        ></a-asset-item>
-        <a-asset-item
-          id="model2"
-          src="assets/models/syokichi.glb"
-        ></a-asset-item>
+        <a-asset-item id="model0" src="assets/models/daikichi.glb"></a-asset-item>
+        <a-asset-item id="model1" src="assets/models/chukichi.glb"></a-asset-item>
+        <a-asset-item id="model2" src="assets/models/syokichi.glb"></a-asset-item>
         <a-asset-item id="model3" src="assets/models/kyo.glb"></a-asset-item>
         <audio id="soundEffect" src="assets/sounds/celebration.mp3"></audio>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity
-        id="target-container"
-        mindar-image-target="targetIndex: 0"
-      ></a-entity>
+      <a-entity id="target-container" mindar-image-target="targetIndex: 0"></a-entity>
+      <div id="clickable-area"></div>
     </a-scene>
 
-    <button
-      id="muteButton"
-      style="position: fixed; bottom: 20px; right: 20px; z-index: 1002"
-    >
+    <button id="muteButton" style="position: fixed; bottom: 20px; right: 20px; z-index: 1001">
       音声ミュート解除
     </button>
 
@@ -118,7 +104,7 @@
       let randInt;
 
       document.addEventListener("DOMContentLoaded", function () {
-        randInt = getRandomInt(0, 1);
+        randInt = getRandomInt(0, 4);
         console.log("Initial random model index: " + randInt);
         // 選択されたモデルを配置
         const targetContainer = document.querySelector("#target-container");
@@ -184,6 +170,7 @@
         }
       }
 
+      const clickableArea = document.getElementById('clickable-area');
       const fortuneDialog = document.getElementById("fortune-dialog");
       const fortuneText = document.getElementById("fortune-text");
       const fortuneDetails = document.getElementById("fortune-details");
@@ -229,27 +216,26 @@
           "ラッキー言語: Haskell  たまには型を守るのも大事。安全に過ごそう！",
       };
 
-      // TODO: 画面全体にしない
-      // document.addEventListener("click", function () {
-      //   if (fortuneDialog && fortuneDetails) {
-      //     fortuneText.textContent = fortuneTexts[randInt];
-      //     fortuneDetails.textContent = fortuneDescriptions[randInt];
-      //     fortuneDialog.showModal(); // showModal()メソッドを使用
-      //     console.log("Fortune dialog should be visible now");
-      //   } else {
-      //     console.error("Fortune dialog or details element not found");
-      //   }
-      // });
+      clickableArea.addEventListener('click', function() {
+        if (fortuneDialog && fortuneDetails) {
+          fortuneText.textContent = fortuneTexts[randInt];
+          fortuneDetails.textContent = fortuneDescriptions[randInt];
+          fortuneDialog.showModal();
+          console.log("Fortune dialog shown");
+        } else {
+          console.error("Fortune dialog or details element not found");
+        }
+      });
 
-      // if (closeFortuneButton) {
-      //   closeFortuneButton.addEventListener("click", function () {
-      //     event.stopPropagation();
-      //     fortuneDialog.close();
-      //     console.log("Fortune dialog should be closed now");
-      //   });
-      // } else {
-      //   console.error("Close button not found");
-      // }
+      if (closeFortuneButton) {
+        closeFortuneButton.addEventListener("click", function () {
+          event.stopPropagation();
+          fortuneDialog.close();
+          console.log("Fortune dialog closed");
+        });
+      } else {
+        console.error("Close button not found");
+      }
 
       //　スクリーンショット
       var image = document.querySelector("#snap");
