@@ -171,6 +171,6 @@
     width: 50vw;
     height: 30vw;
     background-color: transparent;
-    z-index: 1000;
+    z-index: 1001;
     cursor: pointer;
 }
