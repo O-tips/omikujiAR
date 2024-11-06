@@ -207,14 +207,11 @@ function takeSnapshot(video) {
         height
       );
     }
+
     // photoFrame.pngの読み込みと描画
-    const photoFrame = new Image();
-    photoFrame.src = "assets/images/photoFrame.png";
-    resizedContext.drawImage(photoFrame, 0, 0, width, height);
+    resizedContext.drawImage(photoFrame, 0, 0, width, (width/photoFrame.width)*photoFrame.height);
     // header.pngの読み込みと描画
-    const header = new Image();
-    header.src = "assets/images/header.png";
-    resizedContext.drawImage(header, 0, 0, width, height);
+    resizedContext.drawImage(header, 0, 0, width, (width/header.width)*header.height);
 
     return resizedCanvas.toDataURL("image/png");
   }
