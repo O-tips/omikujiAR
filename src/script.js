@@ -198,7 +198,7 @@ function takeSnapshot(video) {
     } else {
       // 縦長（スマホ）
       console.log("height");
-      resizedContext.drawImage(aScene, 0, 0, width, height);
+      resizedContext.drawImage(aScene, 0, 0, width, (width/photoFrame.width)*aScene.height);
     }
 
     // photoFrame.pngの読み込みと描画
