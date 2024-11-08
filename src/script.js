@@ -194,11 +194,8 @@ function takeSnapshot(video) {
       resizedContext.drawImage(aScene, 0, 0, width, height);
     } else {
       // 縦長（スマホ）
+      // サイズ調整しない方が上手くいってるかも
       resizedContext.drawImage(aScene, 0, 0, width, height);
-      // var scale = height / width;
-      // var scaledWidth = height * scale;
-      // var marginLeft = (width - scaledWidth) / 2;
-      // resizedContext.drawImage(aScene, marginLeft, 0, scaledWidth, height);
     }
 
     // photoFrame.pngの読み込みと描画
