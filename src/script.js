@@ -193,19 +193,12 @@ function takeSnapshot(video) {
     //カメラの画角でar側の縮小処理を変える
     if (width > height) {
       // 横長（PC)
+      console.log("wide");
       resizedContext.drawImage(aScene, 0, 0, width, height);
     } else {
       // 縦長（スマホ）
-      var scale = height / width;
-      var scaledWidth = height * scale;
-      var marginLeft = (width - scaledWidth) / 2;
-      resizedContext.drawImage(
-        aScene,
-        marginLeft,
-        0,
-        scaledWidth,
-        height
-      );
+      console.log("height");
+      resizedContext.drawImage(aScene, 0, 0, width, height);
     }
 
     // photoFrame.pngの読み込みと描画
