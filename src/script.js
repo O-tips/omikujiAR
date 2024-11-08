@@ -62,14 +62,12 @@ function updateModel() {
     }
 
     // フォトフレーム表示
-    const photoFrameOverlay = document.getElementById(
-      "photo-frame-overlay"
-    );
+    const photoFrameOverlay = document.getElementById("photo-frame-overlay");
     photoFrameOverlay.style.display = "block";
   }
 }
 
-const clickableArea = document.getElementById('clickable-area');
+const clickableArea = document.getElementById("clickable-area");
 const fortuneDialog = document.getElementById("fortune-dialog");
 const fortuneText = document.getElementById("fortune-text");
 const fortuneDetails = document.getElementById("fortune-details");
@@ -115,7 +113,7 @@ const fortuneDescriptions = {
     "ラッキー言語: Haskell  たまには型を守るのも大事。安全に過ごそう！",
 };
 
-clickableArea.addEventListener('click', function() {
+clickableArea.addEventListener("click", function () {
   if (fortuneDialog && fortuneDetails) {
     fortuneText.textContent = fortuneTexts[randInt];
     fortuneDetails.textContent = fortuneDescriptions[randInt];
@@ -196,22 +194,29 @@ function takeSnapshot(video) {
       resizedContext.drawImage(aScene, 0, 0, width, height);
     } else {
       // 縦長（スマホ）
-      var scale = height / width;
-      var scaledWidth = height * scale;
-      var marginLeft = (width - scaledWidth) / 2;
-      resizedContext.drawImage(
-        aScene,
-        marginLeft,
-        0,
-        scaledWidth,
-        height
-      );
+      resizedContext.drawImage(aScene, 0, 0, width, height);
+      // var scale = height / width;
+      // var scaledWidth = height * scale;
+      // var marginLeft = (width - scaledWidth) / 2;
+      // resizedContext.drawImage(aScene, marginLeft, 0, scaledWidth, height);
     }
 
     // photoFrame.pngの読み込みと描画
-    resizedContext.drawImage(photoFrame, 0, 0, width, (width/photoFrame.width)*photoFrame.height);
+    resizedContext.drawImage(
+      photoFrame,
+      0,
+      0,
+      width,
+      (width / photoFrame.width) * photoFrame.height
+    );
     // header.pngの読み込みと描画
-    resizedContext.drawImage(header, 0, 0, width, (width/header.width)*header.height);
+    resizedContext.drawImage(
+      header,
+      0,
+      0,
+      width,
+      (width / header.width) * header.height
+    );
 
     return resizedCanvas.toDataURL("image/png");
   }
